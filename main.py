@@ -78,7 +78,11 @@ def extractData(json_dict):
     content = dict(dict(dict(response)['choices'][0])['message'])['content']
 
     if content != 'EMPTY':
-        response_json = json.loads(content)
+        if content.count('{') > 1:
+            formatted_content = '{' + content.split('{\n')[-1]
+        else:
+            formatted_content = '{' + content.split('{')[-1]
+        response_json = json.loads(formatted_content)
     else:
         print('No can do!')
         return dumps({'type': 'invalid', 'message': "No supported content available at the provided URL. Please try a URL that contains information on a recipe, a restaurant, a hotel, or a product."})
